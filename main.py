@@ -68,12 +68,55 @@ def api_root():
         <body>
             <h1>API IA-LTIM</h1>
             <h2>Pàgina d'inici</h2>
-            <p>Consulta la documentació a <a href="./docs">/docs</a>.</p>
+            <ul>
+                <li><a href="./sd">Stable Diffusion</a></li>
+                <li><a href="./ollama">Ollama</a></li>
+            </ul>
         </body>
     </html>
     """
-####
-class Txt2ImgQuery(BaseModel):
+
+@sd.get("/", response_class=HTMLResponse)
+def api_root():
+    return """
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>IA-LTIM</title>
+        </head>
+        <body>
+            <h1>API Stable Diffusion</h1>
+            <h2>Pàgina d'inici</h2>
+            <p><a href="./docs">Documentació</a>.</p>
+        </body>
+    </html>
+    """
+
+@ollama.get("/", response_class=HTMLResponse)
+def api_root():
+    return """
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>IA-LTIM</title>
+        </head>
+        <body>
+            <h1>API Stable Diffusion</h1>
+            <h2>Pàgina d'inici</h2>
+            <p><a href="./docs">Documentació</a>.</p>
+        </body>
+    </html>
+    """
+
+####################
+# STABLE DIFFUSION #
+####################
+
+class SDTxt2ImgQuery(BaseModel):
     prompt: str | None = Field(default="", title="Prompt", max_length=250)
     negative_prompt: str | None = Field(default="", title="Negative prompt", max_length=250)
     model: str | None = Field(default="", title="Model", max_length=50)
