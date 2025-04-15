@@ -1,0 +1,3 @@
+set curdir=%~dp0
+echo %curdir%
+wt.exe --maximized -d %curdir% Powershell.exe -NoExit "nssm status api" ; split-pane -d %curdir% --horizontal --size .66 Powershell.exe -NoExit "Get-Content stdout.log -Wait -Tail 30" ; split-pane -d %curdir% --horizontal --size .5 Powershell.exe -NoExit "Get-Content stderr.log -Wait -Tail 30" ; mf first ; split-pane -d %curdir% --vertical Powershell.exe -NoExit "pipx run nvitop --monitor full" ; mf first
