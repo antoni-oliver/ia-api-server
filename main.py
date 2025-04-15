@@ -4,11 +4,29 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 import httpx
+import mariadb
+import sys
+import os
+
+try:
+    conn = mariadb.connect(
+        user=os.environ['DB_USER'],
+        password=os.environ['DB_PASSWORD'],
+        host=os.environ['DB_HOST'],
+        port=int(os.environ['DB_PORT']),
+        database=os.environ['DB_DATABASE']
+    )
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
+    sys.exit(1)
+
+dbCursor = conn.cursor()
+
+print(dbCursor)
 
 app = FastAPI()
 
 api = FastAPI()
-
 app.mount('/api', api)
 
 @app.get("/", response_class=HTMLResponse)
