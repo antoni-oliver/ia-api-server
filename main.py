@@ -29,6 +29,13 @@ app = FastAPI()
 api = FastAPI()
 app.mount('/api', api)
 
+sd = FastAPI()
+api.mount('/sd', sd)
+
+ollama = FastAPI()
+api.mount('/ollama', ollama)
+
+
 @app.get("/", response_class=HTMLResponse)
 def app_root():
     #return "Servidor IA-LTIM. Prova d'accedir a /api."
