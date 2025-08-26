@@ -35,6 +35,9 @@ api.mount('/sd', sd)
 ollama = FastAPI()
 api.mount('/ollama', ollama)
 
+lorasuib = FastAPI()
+api.mount('/lorasuib', lorasuib)
+
 
 @app.get("/", response_class=HTMLResponse)
 def app_root():
@@ -264,3 +267,4 @@ async def ollama_embed(query: OLLAMAEmbedQuery):
         response = await client.post("http://localhost:11434/api/embed", json=json_query, timeout=timeout)
         json_response = response.json()
         return json_response
+
