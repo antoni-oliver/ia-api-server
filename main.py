@@ -35,6 +35,9 @@ api.mount('/sd', sd)
 ollama = FastAPI()
 api.mount('/ollama', ollama)
 
+ollamaredirect = FastAPI()
+ollama.mount('/api', ollamaredirect)
+
 lorasuib = FastAPI()
 api.mount('/lorasuib', lorasuib)
 
@@ -208,6 +211,7 @@ def ollama_streaming_call(verb, json, timeout):
     with httpx.stream("POST", "http://localhost:11434/api/" + verb, json=json, timeout=timeout) as response:
         yield from response.iter_raw()
 
+@ollamaredirect.post('/generate')
 @ollama.post("/generate")
 async def ollama_generate(query: OLLAMAGenerateQuery):
     json_query = jsonable_encoder(query)
@@ -236,6 +240,7 @@ class OLLAMAChatQuery(BaseModel):
     stream: bool | None = Field(default=True, title="Stream")
     # keep_alive
 
+@ollamaredirect.post('/chat')
 @ollama.post("/chat")
 async def ollama_chat(query: OLLAMAChatQuery):
     json_query = jsonable_encoder(query)
@@ -259,6 +264,7 @@ class OLLAMAEmbedQuery(BaseModel):
     options: object = Field(default={}, title="Options")
     # keep_alive
 
+@ollamaredirect.post('/embed')
 @ollama.post("/embed")
 async def ollama_embed(query: OLLAMAEmbedQuery):
     json_query = jsonable_encoder(query)
@@ -268,3 +274,11 @@ async def ollama_embed(query: OLLAMAEmbedQuery):
         json_response = response.json()
         return json_response
 
+@ollamaredirect.get('/tags')
+@ollama.get("/tags")
+async def ollama_tags():
+    async with httpx.AsyncClient() as client:
+        timeout = httpx.Timeout(30.0, read=None)
+        response = await client.get("http://localhost:11434/api/tags", timeout=timeout)
+        json_response = response.json()
+        return json_response
